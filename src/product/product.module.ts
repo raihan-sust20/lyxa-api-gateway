@@ -18,7 +18,7 @@ import { PRODUCT_GRPC_CLIENT } from './grpc-client/product.grpc-client.interface
           transport: Transport.GRPC,
           options: {
             package: 'product',
-            protoPath: join(__dirname, '../../proto/product.proto'),
+            protoPath: join(process.cwd(), 'proto/product.proto'),
             url: configService.get<string>('grpc.product.url'),
           },
         }),

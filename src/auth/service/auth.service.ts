@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AuthGrpcClient } from '../grpc-client/auth.grpc-client';
-import { LoginDto, LoginResponseDto } from '../dto/login.dto';
-import { RegisterDto, RegisterResponseDto } from '../dto/register.dto';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto, AuthResponseDto } from '../dto/register.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly authGrpcClient: AuthGrpcClient) {}
 
-  async login(dto: LoginDto): Promise<LoginResponseDto> {
+  async login(dto: LoginDto): Promise<AuthResponseDto> {
     const response = await firstValueFrom(
       this.authGrpcClient.login({
         email: dto.email,
@@ -16,14 +16,10 @@ export class AuthService {
       }),
     );
 
-    return {
-      accessToken: response.accessToken,
-      tokenType: response.tokenType,
-      expiresIn: response.expiresIn,
-    };
+    return response;
   }
 
-  async register(dto: RegisterDto): Promise<RegisterResponseDto> {
+  async register(dto: RegisterDto): Promise<AuthResponseDto> {
     const response = await firstValueFrom(
       this.authGrpcClient.register({
         email: dto.email,
@@ -32,11 +28,6 @@ export class AuthService {
       }),
     );
 
-    return {
-      id: response.id,
-      email: response.email,
-      name: response.name,
-      createdAt: response.createdAt,
-    };
+    return response;
   }
 }

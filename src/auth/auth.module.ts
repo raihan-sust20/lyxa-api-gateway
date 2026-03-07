@@ -18,7 +18,7 @@ import { AUTH_GRPC_CLIENT } from './grpc-client/auth.grpc-client.interface';
           transport: Transport.GRPC,
           options: {
             package: 'auth',
-            protoPath: join(__dirname, '../../proto/auth.proto'),
+            protoPath: join(process.cwd(), 'proto/auth.proto'),
             url: configService.get<string>('grpc.auth.url'),
           },
         }),

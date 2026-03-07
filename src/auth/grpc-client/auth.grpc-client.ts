@@ -5,11 +5,13 @@ import {
   AUTH_GRPC_CLIENT,
   IAuthGrpcClient,
   LoginRequest,
-  LoginResponse,
+  AuthResponse,
   RegisterRequest,
-  RegisterResponse,
-  VerifyTokenRequest,
-  VerifyTokenResponse,
+  ValidateTokenRequest,
+  ValidateTokenResponse,
+  type LogoutRequest,
+  type LogoutResponse,
+  type RefreshTokenRequest,
 } from './auth.grpc-client.interface';
 
 @Injectable()
@@ -22,15 +24,25 @@ export class AuthGrpcClient implements IAuthGrpcClient, OnModuleInit {
     this.authService = this.client.getService<IAuthGrpcClient>('AuthService');
   }
 
-  login(request: LoginRequest): Observable<LoginResponse> {
+  login(request: LoginRequest): Observable<AuthResponse> {
     return this.authService.login(request);
   }
 
-  register(request: RegisterRequest): Observable<RegisterResponse> {
+  register(request: RegisterRequest): Observable<AuthResponse> {
     return this.authService.register(request);
   }
 
-  verifyToken(request: VerifyTokenRequest): Observable<VerifyTokenResponse> {
-    return this.authService.verifyToken(request);
+  validateToken(
+    request: ValidateTokenRequest,
+  ): Observable<ValidateTokenResponse> {
+    return this.authService.validateToken(request);
+  }
+
+  refreshToken(request: RefreshTokenRequest): Observable<AuthResponse> {
+    return this.authService.refreshToken(request);
+  }
+
+  logout(request: LogoutRequest): Observable<LogoutResponse> {
+    return this.authService.logout(request);
   }
 }

@@ -13,9 +13,9 @@ import { GrpcExceptionFilter } from './filters/grpc-exception.filter';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt.secret'),
+        secret: configService.get<string>('jwt.accessSecret')!,
         signOptions: {
-          expiresIn: configService.get<string>('jwt.expiration'),
+          expiresIn: configService.get<number>('jwt.accessExpiresIn'),
         },
       }),
     }),

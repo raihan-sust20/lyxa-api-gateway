@@ -29,7 +29,7 @@ export class JwtAuthGuard implements CanActivate {
         sub: string;
         email: string;
       }>(token, {
-        secret: this.configService.get<string>('jwt.secret'),
+        secret: this.configService.get<string>('jwt.accessSecret'),
       });
 
       request.user = {

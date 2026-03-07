@@ -17,16 +17,25 @@ export class RegisterDto {
   name: string;
 }
 
-export class RegisterResponseDto {
+export class AuthResponseDto {
+  @ApiProperty({ example: 'John Doe' })
+  name: string;
+
   @ApiProperty({ example: 'a1b2c3d4-e5f6-...' })
-  id: string;
+  userId: string;
 
   @ApiProperty({ example: 'user@example.com' })
   email: string;
 
-  @ApiProperty({ example: 'John Doe' })
-  name: string;
+  @ApiProperty({ example: 'a1b2c3d4-e5f6-...' })
+  accessToken: string;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
-  createdAt: string;
+  @ApiProperty({ example: 'a1b2c3d5-f5h6-...' })
+  refreshToken: string;
+
+  @ApiProperty({ example: 1700001000 })
+  accessTokenExpiresAt: number;
+
+  @ApiProperty({ example: 1700003000 })
+  refreshTokenExpiresAt: number;
 }
