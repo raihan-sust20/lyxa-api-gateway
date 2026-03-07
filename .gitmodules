@@ -1,0 +1,3 @@
+[submodule "lyxa-be-common"]
+	path = lyxa-be-common
+	url = https://github.com/raihan-sust20/lyxa-be-common
