@@ -49,13 +49,18 @@ export class ProductGrpcClient implements OnModuleInit {
     return this.productService.createProduct(request, metadata);
   }
 
-  updateProduct(request: UpdateProductRequest): Observable<ProductResponse> {
-    return this.productService.updateProduct(request);
+  updateProduct(authToken: string, request: UpdateProductRequest): Observable<ProductResponse> {
+    const metadata = new Metadata();
+    metadata.set('authorization', `Bearer ${authToken}`);
+    return this.productService.updateProduct(request, metadata);
   }
 
   deleteProduct(
+    authToken: string,
     request: DeleteProductRequest,
   ): Observable<DeleteProductResponse> {
-    return this.productService.deleteProduct(request);
+    const metadata = new Metadata();
+    metadata.set('authorization', `Bearer ${authToken}`);
+    return this.productService.deleteProduct(request, metadata);
   }
 }

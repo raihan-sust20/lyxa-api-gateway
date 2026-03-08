@@ -104,8 +104,10 @@ export class ProductController {
   async updateProduct(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
+    @Headers('authorization') authorization: string,
   ): Promise<ApiResponse<ProductResponseDto>> {
-    const data = await this.productService.updateProduct(id, dto);
+    const authToken = authorization?.replace('Bearer ', '');
+    const data = await this.productService.updateProduct(authToken, id, dto);
     return ApiResponse.ok(data, 'Product updated successfully');
   }
 
@@ -117,8 +119,10 @@ export class ProductController {
   @SwaggerResponse({ status: 404, description: 'Product not found' })
   async deleteProduct(
     @Param('id') id: string,
+    @Headers('authorization') authorization: string,
   ): Promise<ApiResponse<{ success: boolean; message: string }>> {
-    const data = await this.productService.deleteProduct(id);
+    const authToken = authorization?.replace('Bearer ', '');
+    const data = await this.productService.deleteProduct(authToken, id);
     return ApiResponse.ok(data, 'Product deleted successfully');
   }
 }

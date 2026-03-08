@@ -55,8 +55,8 @@ export interface IProductGrpcClient {
   getProduct(request: GetProductRequest, metadata: Metadata): Observable<ProductResponse>;
   listProducts(request: ListProductsRequest, metadata: Metadata): Observable<ListProductsResponse>;
   createProduct(request: CreateProductRequest, metadata: Metadata): Observable<ProductResponse>;
-  updateProduct(request: UpdateProductRequest): Observable<ProductResponse>;
-  deleteProduct(request: DeleteProductRequest): Observable<DeleteProductResponse>;
+  updateProduct(request: UpdateProductRequest, metadata: Metadata): Observable<ProductResponse>;
+  deleteProduct(request: DeleteProductRequest, metadata: Metadata): Observable<DeleteProductResponse>;
 }
 
 export const PRODUCT_GRPC_CLIENT = Symbol('PRODUCT_GRPC_CLIENT');

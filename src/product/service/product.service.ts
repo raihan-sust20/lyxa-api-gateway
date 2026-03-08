@@ -46,11 +46,12 @@ export class ProductService {
   }
 
   async updateProduct(
+    authToken: string,
     id: string,
     dto: UpdateProductDto,
   ): Promise<ProductResponseDto> {
     return firstValueFrom(
-      this.productGrpcClient.updateProduct({
+      this.productGrpcClient.updateProduct(authToken, {
         id,
         name: dto.name ?? '',
         description: dto.description ?? '',
@@ -61,8 +62,9 @@ export class ProductService {
   }
 
   async deleteProduct(
+    authToken: string,
     id: string,
   ): Promise<{ success: boolean; message: string }> {
-    return firstValueFrom(this.productGrpcClient.deleteProduct({ id }));
+    return firstValueFrom(this.productGrpcClient.deleteProduct(authToken, { id }));
   }
 }

@@ -2,6 +2,56 @@ version: "3.9"
 
 services:
 
+  lyxa-api-gateway:
+    build:
+      context: ./lyxa-api-gateway
+      dockerfile: Dockerfile
+    container_name: lyxa-api-gateway
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./lyxa-api-gateway/.env
+    depends_on:
+      - lyxa-auth-service
+      - lyxa-product-service
+      - rabbitmq
+      - mongodb
+    networks:
+      - lyxa-network
+    entrypoint: ["sh", "-c", "sleep 20 && node dist/main.js"]
+
+  lyxa-auth-service:
+    build:
+      context: ./lyxa-auth-service
+      dockerfile: Dockerfile
+    container_name: lyxa-auth-service
+    ports:
+      - "50051:50051"
+    env_file:
+      - ./lyxa-auth-service/.env
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - lyxa-network
+    entrypoint: ["sh", "-c", "sleep 10 && node dist/main.js"]
+
+  lyxa-product-service:
+    build:
+      context: ./lyxa-product-service
+      dockerfile: Dockerfile
+    container_name: lyxa-product-service
+    ports:
+      - "50053:50053"
+    env_file:
+      - ./lyxa-product-service/.env
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - lyxa-network
+    entrypoint: ["sh", "-c", "sleep 10 && node dist/main.js"]
+  
   mongodb:
     image: mongo:8.2.6-rc0-noble
     container_name: lyxa-mongodb
@@ -11,7 +61,7 @@ services:
     volumes:
       - lyxa_mongodb_data:/data/db
     networks:
-      - lyxa-be
+      - lyxa-network
 
   rabbitmq:
     image: rabbitmq:4-management
@@ -26,12 +76,12 @@ services:
     volumes:
       - lyxa_rabbitmq_data:/var/lib/rabbitmq
     networks:
-      - lyxa-be
+      - lyxa-network
 
 volumes:
   lyxa_mongodb_data:
   lyxa_rabbitmq_data:
 
 networks:
-  lyxa-be:
+  lyxa-network:
     driver: bridge
