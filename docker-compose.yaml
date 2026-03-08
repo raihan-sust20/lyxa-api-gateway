@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+
+  mongodb:
+    image: mongo:8.2.6-rc0-noble
+    container_name: lyxa-mongodb
+    restart: unless-stopped
+    ports:
+      - "29017:27017"
+    volumes:
+      - lyxa_mongodb_data:/data/db
+    networks:
+      - lyxa-be
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: lyxa-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: lyxa_user
+      RABBITMQ_DEFAULT_PASS: lyxa_password
+    volumes:
+      - lyxa_rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - lyxa-be
+
+volumes:
+  lyxa_mongodb_data:
+  lyxa_rabbitmq_data:
+
+networks:
+  lyxa-be:
+    driver: bridge
