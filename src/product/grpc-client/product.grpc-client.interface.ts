@@ -52,8 +52,8 @@ export interface DeleteProductResponse {
 }
 
 export interface IProductGrpcClient {
-  getProduct(request: GetProductRequest): Observable<ProductResponse>;
-  listProducts(request: ListProductsRequest): Observable<ListProductsResponse>;
+  getProduct(request: GetProductRequest, metadata: Metadata): Observable<ProductResponse>;
+  listProducts(request: ListProductsRequest, metadata: Metadata): Observable<ListProductsResponse>;
   createProduct(request: CreateProductRequest, metadata: Metadata): Observable<ProductResponse>;
   updateProduct(request: UpdateProductRequest): Observable<ProductResponse>;
   deleteProduct(request: DeleteProductRequest): Observable<DeleteProductResponse>;

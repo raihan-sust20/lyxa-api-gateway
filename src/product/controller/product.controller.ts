@@ -23,10 +23,9 @@ import {
 import { ProductService } from '../service/product.service';
 import {
   CreateProductDto,
-  ListProductsQueryDto,
-  ListProductsResponseDto,
   ProductResponseDto,
 } from '../dto/create-product.dto';
+import { ListProductsQueryDto, ListProductsResponseDto } from '../dto/list-products.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { ApiResponse } from '../../common/response/api-response';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -47,8 +46,10 @@ export class ProductController {
   })
   async listProducts(
     @Query() query: ListProductsQueryDto,
+    @Headers('authorization') authorization: string,
   ): Promise<ApiResponse<ListProductsResponseDto>> {
-    const data = await this.productService.listProducts(query);
+    const authToken = authorization?.replace('Bearer ', '');
+    const data = await this.productService.listProducts(authToken, query);
     return ApiResponse.ok(data, 'Products retrieved successfully');
   }
 
@@ -64,8 +65,10 @@ export class ProductController {
   @SwaggerResponse({ status: 404, description: 'Product not found' })
   async getProduct(
     @Param('id') id: string,
+    @Headers('authorization') authorization: string,
   ): Promise<ApiResponse<ProductResponseDto>> {
-    const data = await this.productService.getProduct(id);
+    const authToken = authorization?.replace('Bearer ', '');
+    const data = await this.productService.getProduct(authToken, id);
     return ApiResponse.ok(data, 'Product retrieved successfully');
   }
 

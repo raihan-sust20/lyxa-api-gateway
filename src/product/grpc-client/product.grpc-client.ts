@@ -28,12 +28,16 @@ export class ProductGrpcClient implements OnModuleInit {
       this.client.getService<IProductGrpcClient>('ProductService');
   }
 
-  getProduct(request: GetProductRequest): Observable<ProductResponse> {
-    return this.productService.getProduct(request);
+  getProduct(authToken: string, request: GetProductRequest): Observable<ProductResponse> {
+    const metadata = new Metadata();
+    metadata.set('authorization', `Bearer ${authToken}`);
+    return this.productService.getProduct(request, metadata);
   }
 
-  listProducts(request: ListProductsRequest): Observable<ListProductsResponse> {
-    return this.productService.listProducts(request);
+  listProducts(authToken: string, request: ListProductsRequest): Observable<ListProductsResponse> {
+    const metadata = new Metadata();
+    metadata.set('authorization', `Bearer ${authToken}`);
+    return this.productService.listProducts(request, metadata);
   }
 
   createProduct(

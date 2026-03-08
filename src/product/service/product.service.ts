@@ -3,32 +3,40 @@ import { firstValueFrom } from 'rxjs';
 import { ProductGrpcClient } from '../grpc-client/product.grpc-client';
 import {
   CreateProductDto,
-  ListProductsQueryDto,
-  ListProductsResponseDto,
   ProductResponseDto,
 } from '../dto/create-product.dto';
+import {
+  ListProductsQueryDto,
+  ListProductsResponseDto,
+} from '../dto/list-products.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
   constructor(private readonly productGrpcClient: ProductGrpcClient) {}
 
-  async getProduct(id: string): Promise<ProductResponseDto> {
-    return firstValueFrom(this.productGrpcClient.getProduct({ id }));
+  async getProduct(authToken: string, id: string): Promise<ProductResponseDto> {
+    return firstValueFrom(this.productGrpcClient.getProduct(authToken, { id }));
   }
 
-  async listProducts(query: ListProductsQueryDto): Promise<ListProductsResponseDto> {
+  async listProducts(
+    authToken: string,
+    query: ListProductsQueryDto,
+  ): Promise<ListProductsResponseDto> {
     return firstValueFrom(
-      this.productGrpcClient.listProducts({
+      this.productGrpcClient.listProducts(authToken, {
         page: query.page ?? 1,
         limit: query.limit ?? 10,
       }),
     );
   }
 
-  async createProduct(authToken: string, dto: CreateProductDto): Promise<ProductResponseDto> {
+  async createProduct(
+    authToken: string,
+    dto: CreateProductDto,
+  ): Promise<ProductResponseDto> {
     return firstValueFrom(
-      this.productGrpcClient.createProduct(authToken,{
+      this.productGrpcClient.createProduct(authToken, {
         name: dto.name,
         description: dto.description,
         price: dto.price,
@@ -37,7 +45,10 @@ export class ProductService {
     );
   }
 
-  async updateProduct(id: string, dto: UpdateProductDto): Promise<ProductResponseDto> {
+  async updateProduct(
+    id: string,
+    dto: UpdateProductDto,
+  ): Promise<ProductResponseDto> {
     return firstValueFrom(
       this.productGrpcClient.updateProduct({
         id,
@@ -49,7 +60,9 @@ export class ProductService {
     );
   }
 
-  async deleteProduct(id: string): Promise<{ success: boolean; message: string }> {
+  async deleteProduct(
+    id: string,
+  ): Promise<{ success: boolean; message: string }> {
     return firstValueFrom(this.productGrpcClient.deleteProduct({ id }));
   }
 }
