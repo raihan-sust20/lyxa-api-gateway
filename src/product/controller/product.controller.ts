@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Param,
@@ -32,7 +33,6 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @ApiTags('Products')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -40,7 +40,11 @@ export class ProductController {
   @Get()
   @Version('1')
   @ApiOperation({ summary: 'List all products with pagination' })
-  @SwaggerResponse({ status: 200, description: 'Products retrieved successfully', type: ListProductsResponseDto })
+  @SwaggerResponse({
+    status: 200,
+    description: 'Products retrieved successfully',
+    type: ListProductsResponseDto,
+  })
   async listProducts(
     @Query() query: ListProductsQueryDto,
   ): Promise<ApiResponse<ListProductsResponseDto>> {
@@ -52,9 +56,15 @@ export class ProductController {
   @Version('1')
   @ApiOperation({ summary: 'Get a product by ID' })
   @ApiParam({ name: 'id', description: 'Product UUID' })
-  @SwaggerResponse({ status: 200, description: 'Product retrieved successfully', type: ProductResponseDto })
+  @SwaggerResponse({
+    status: 200,
+    description: 'Product retrieved successfully',
+    type: ProductResponseDto,
+  })
   @SwaggerResponse({ status: 404, description: 'Product not found' })
-  async getProduct(@Param('id') id: string): Promise<ApiResponse<ProductResponseDto>> {
+  async getProduct(
+    @Param('id') id: string,
+  ): Promise<ApiResponse<ProductResponseDto>> {
     const data = await this.productService.getProduct(id);
     return ApiResponse.ok(data, 'Product retrieved successfully');
   }
@@ -63,12 +73,18 @@ export class ProductController {
   @Version('1')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new product' })
-  @SwaggerResponse({ status: 201, description: 'Product created successfully', type: ProductResponseDto })
+  @SwaggerResponse({
+    status: 201,
+    description: 'Product created successfully',
+    type: ProductResponseDto,
+  })
   @SwaggerResponse({ status: 400, description: 'Validation error' })
   async createProduct(
     @Body() dto: CreateProductDto,
+    @Headers('authorization') authorization: string,
   ): Promise<ApiResponse<ProductResponseDto>> {
-    const data = await this.productService.createProduct(dto);
+    const authToken = authorization?.replace('Bearer ', '');
+    const data = await this.productService.createProduct(authToken, dto);
     return ApiResponse.ok(data, 'Product created successfully');
   }
 
@@ -76,7 +92,11 @@ export class ProductController {
   @Version('1')
   @ApiOperation({ summary: 'Update an existing product' })
   @ApiParam({ name: 'id', description: 'Product UUID' })
-  @SwaggerResponse({ status: 200, description: 'Product updated successfully', type: ProductResponseDto })
+  @SwaggerResponse({
+    status: 200,
+    description: 'Product updated successfully',
+    type: ProductResponseDto,
+  })
   @SwaggerResponse({ status: 404, description: 'Product not found' })
   async updateProduct(
     @Param('id') id: string,

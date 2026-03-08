@@ -26,9 +26,9 @@ export class ProductService {
     );
   }
 
-  async createProduct(dto: CreateProductDto): Promise<ProductResponseDto> {
+  async createProduct(authToken: string, dto: CreateProductDto): Promise<ProductResponseDto> {
     return firstValueFrom(
-      this.productGrpcClient.createProduct({
+      this.productGrpcClient.createProduct(authToken,{
         name: dto.name,
         description: dto.description,
         price: dto.price,

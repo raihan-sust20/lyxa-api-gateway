@@ -1,3 +1,4 @@
+import type { Metadata } from '@grpc/grpc-js';
 import { Observable } from 'rxjs';
 
 export interface GetProductRequest {
@@ -53,7 +54,7 @@ export interface DeleteProductResponse {
 export interface IProductGrpcClient {
   getProduct(request: GetProductRequest): Observable<ProductResponse>;
   listProducts(request: ListProductsRequest): Observable<ListProductsResponse>;
-  createProduct(request: CreateProductRequest): Observable<ProductResponse>;
+  createProduct(request: CreateProductRequest, metadata: Metadata): Observable<ProductResponse>;
   updateProduct(request: UpdateProductRequest): Observable<ProductResponse>;
   deleteProduct(request: DeleteProductRequest): Observable<DeleteProductResponse>;
 }

@@ -13,15 +13,19 @@ import {
   ListProductsResponse,
   DeleteProductResponse,
 } from './product.grpc-client.interface';
+import { Metadata } from '@grpc/grpc-js';
 
 @Injectable()
-export class ProductGrpcClient implements IProductGrpcClient, OnModuleInit {
+export class ProductGrpcClient implements OnModuleInit {
   private productService: IProductGrpcClient;
 
-  constructor(@Inject(PRODUCT_GRPC_CLIENT) private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject(PRODUCT_GRPC_CLIENT) private readonly client: ClientGrpc,
+  ) {}
 
   onModuleInit(): void {
-    this.productService = this.client.getService<IProductGrpcClient>('ProductService');
+    this.productService =
+      this.client.getService<IProductGrpcClient>('ProductService');
   }
 
   getProduct(request: GetProductRequest): Observable<ProductResponse> {
@@ -32,15 +36,22 @@ export class ProductGrpcClient implements IProductGrpcClient, OnModuleInit {
     return this.productService.listProducts(request);
   }
 
-  createProduct(request: CreateProductRequest): Observable<ProductResponse> {
-    return this.productService.createProduct(request);
+  createProduct(
+    authToken: string,
+    request: CreateProductRequest,
+  ): Observable<ProductResponse> {
+    const metadata = new Metadata();
+    metadata.set('authorization', `Bearer ${authToken}`);
+    return this.productService.createProduct(request, metadata);
   }
 
   updateProduct(request: UpdateProductRequest): Observable<ProductResponse> {
     return this.productService.updateProduct(request);
   }
 
-  deleteProduct(request: DeleteProductRequest): Observable<DeleteProductResponse> {
+  deleteProduct(
+    request: DeleteProductRequest,
+  ): Observable<DeleteProductResponse> {
     return this.productService.deleteProduct(request);
   }
 }
